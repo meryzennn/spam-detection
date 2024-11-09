@@ -1,69 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spam Detector</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      background-color: #fff;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Detection</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h2>Spam Detector</h2>
-    <input type="text" id="inputText" placeholder="Masukkan pesan di sini...">
-    <button onclick="checkSpam()">Cek Spam</button>
-    <div class="result" id="result"></div>
-  </div>
+    <div class="container mt-5">
+        <h2 class="text-center">Spam Message Detection</h2>
+        <form id="spamForm">
+            <div class="form-group">
+                <label for="messageInput">Enter Message</label>
+                <textarea class="form-control" id="messageInput" rows="4" placeholder="Enter the message to check for spam"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Check Message</button>
+        </form>
+        <div class="mt-3">
+            <h4>Result:</h4>
+            <div id="result" class="alert" style="display: none;"></div>
+        </div>
+    </div>
 
-  <script>
-    async function checkSpam() {
-      const inputText = document.getElementById('inputText').value;
-      const response = await fetch('/api/deteksi-spam', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message: inputText })
-      });
-      const result = await response.json();
-      document.getElementById('result').innerText = `Prediksi: ${result.prediction}`;
-    }
-  </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#spamForm').on('submit', function (event) {
+                event.preventDefault();
+                var message = $('#messageInput').val();
+                
+                $.ajax({
+                    url: '/predict',  // Endpoint for the backend
+                    type: 'POST',
+                    data: JSON.stringify({ "message": message }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        var result = response.result;
+                        var resultClass = result === "spam" ? "alert-danger" : "alert-success";
+                        
+                        $('#result').removeClass('alert-danger alert-success').addClass(resultClass).text(result).show();
+                    },
+                    error: function() {
+                        $('#result').removeClass('alert-danger alert-success').addClass("alert-warning").text("Error processing request").show();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
