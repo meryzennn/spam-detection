@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deteksi Spam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            padding: 10px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Deteksi Spam</h2>
+
+<!-- Form untuk mengirimkan inputan ke server -->
+<form action="/predict" method="POST">
+    <textarea name="message" placeholder="Masukkan teks di sini..."></textarea><br><br>
+    <input type="submit" value="Periksa Spam">
+</form>
+
+{% if message %}
+    <h3>Pesan: {{ message }}</h3>
+    <h3>Prediksi: {{ result }}</h3>
+{% endif %}
+
+</body>
+</html>
