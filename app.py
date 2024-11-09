@@ -33,4 +33,4 @@ def check_spam():
     return jsonify({'is_spam': prediction[0]})
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
