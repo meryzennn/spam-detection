@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Pendeteksi Spam</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Pendeteksi Spam</a>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Masukkan Pesan untuk Diperiksa</h1>
+        <form id="spamForm">
+            <div class="form-group">
+                <label for="message">Pesan:</label>
+                <textarea class="form-control" id="message" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Periksa Spam</button>
+        </form>
+        <div id="result" class="mt-3"></div>
+    </div>
+
+    <script>
+        document.getElementById('spamForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const message = document.getElementById('message').value;
+
+            fetch('/check_spam', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'message': message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                if (data.is_spam === 'spam') {
+                    resultDiv.innerHTML = '<p class="text-danger">Pesan ini adalah spam!</p>';
+                } else {
+                    resultDiv.innerHTML = '<p class="text-success">Pesan ini bukan spam.</p>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
