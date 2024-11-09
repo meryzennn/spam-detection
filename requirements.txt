@@ -1,4 +1,5 @@
-Flask
-gunicorn
-pandas
+fastapi
+joblib
+requests
 scikit-learn
+uvicorn
